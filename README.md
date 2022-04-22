@@ -1,5 +1,5 @@
 # Visualiztion-knowledge_graph
-Vis.js, cytoscape.js, Sigma.js 
+Using Vis.js, cytoscape.js, Sigma.js 
 
 
 
