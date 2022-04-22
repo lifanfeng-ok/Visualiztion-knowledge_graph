@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" type="text/css" href="lib/jsonview.bundle.css">
+
+  <style>
+    td,th { vertical-align: top; padding:10px; text-align: left;}
+
+    </style>
+</head>
+
+<body>
+
+  <table>
+    <tr>
+      <td style="width:20%; background-color:hsl(120,40%,80%)">
+        <h2>Compositions of Zubir Said</h2>
+
+        <p><em>Select one:</em></p>
+        <p><button onclick="retrieve(song1,queryText1a)">Majulah Singapura</button></p>
+        <p><button onclick="retrieve(song2,queryText1a)">Semoga Bahagia</button></p>
+        <p>Other songs</p>
+
+      </td>
+      <td>
+        <h2 id="query">Click on a button on the left panel</h2>
+        
+        <h3>Table display</h3>
+        <div id="json-table"></div>
+
+        <h3>Tree view</h3>
+        <div class="json-view"></div>
+
+        <h3>Raw Json </h3>
+        <p id="raw-json"></p>
+
+
+      </td>
+    </tr>
+  </table>
+
+
+  <script src="lib/neo4j-web.min.js"></script>
+  <script src="lib/jsonview.bundle.js"></script>
+
+  <script>
+
+    const song1 = "Majulah_Singapura-Work"
+    const song2 = "Semoga_Bahagia-Work"
+
+
+    /** Create connection object **/
+    const driver = neo4j.driver(
+      'neo4j+s://0c8dfc4e.databases.neo4j.io',
+      neo4j.auth.basic('anonymous', 'anonymous')
+    )
+
+    // Check connection
+    /*
+    try {
+      driver.verifyConnectivity()
+      console.log('Driver created')
+    } catch (error) {
+      console.log(`connectivity verification failed. ${error}`)
+    } 
+    */
+
+
+    /** Cypher query texts **/
+
+    // Neighbor link: [] -(relation)- []
+    const queryText1 =
+      `MATCH (n1 {id: $param})-[r]-(n2)
+      RETURN r,n2`
+
+    // Work -(relation)-> []
+    const queryText1a =
+      `MATCH (:MusicalWork {id: $param})-[r:ARRANGEMENT|ARRANGER|COMPOSER|CONDUCTOR|CONTRIBUTOR|CREATOR|DIRECTOR|HAS_PART|PERFORMED_IN|PERFORMER|PRODUCED_SCORE|PRODUCED_SOUND|REALIZATION]->(n2)
+      RETURN r,n2`
+
+    // Work -(relation)- [] -(relation)- []
+    // const queryText1b =
+    //  `MATCH (:MusicalWork {id: $param})-[r1:COMPOSER|CONTRIBUTOR|PRODUCED_SCORE|REALIZATION]->(n2)-[r2:ARRANGEMENT|ARRANGER|CONDUCTOR|CONTRIBUTOR|DIRECTOR|HAS_PART|PERFORMED_IN|PERFORMER|PRODUCED_SCORE|PRODUCED_SOUND]->(n3)
+    //  RETURN r1,n2,r2,n3`
+
+    // List letters, and audio & video files related to song
+    const queryText1c =
+      `MATCH (n1:MusicalWork {id: $param})-[*1..3]->(n2)-[:ITEM]->(n3))
+      RETURN n2,n3`
+
+    // Links between $specific_person and Zubir Said
+    const queryText2a =
+      `MATCH (:Person {id: "Zubir_Said"})-[r:ARRANGEMENT|ARRANGER|AUTHOR|CC|COMPOSER|CONDUCTOR|CONTRIBUTOR|CREATOR|DIRECTOR|EVENT|HAS_PART|ISSUED_BY|PERFORMED_IN|PERFORMER|PERSON_SHOWN|PRODUCED_SCORE|PRODUCED_SOUND|REALIZATION|RECIPIENT|RESPONSE_TO|SENDER|SPOUSE*1..3]-(n2:Person {id: $param})
+      RETURN r,n2`
+
+    // Browse by genre -- photograph, letter, etc.
+    const queryText2b =
+      `MATCH (w:CreativeWork {type: $param})-[r:ABOUT|AUTHOR|BIOGRAPHY|CC|CONTENT|CONTRIBUTOR|CREATOR|EVENT|HAS_PART|ISSUED_BY|LOCATION|MENTIONS|CURRENT_LOCATION|PERSON_SHOWN|PRINCIPAL|RECIPIENT|RESPONSE_TO|SENDER|SPOUSE|STATE|ITEM]-(n2)
+      RETURN r,n2`
+
+    // Browse by $topic
+    const queryText2c =
+      `MATCH (:Topic {id: $param})-[r:ABOUT|CONTENT|HAS_PART|LOCATION|MENTIONS]-(n2)
+      RETURN r,n2`
+
+
+    // Example 
+    // document.getElementById("test").innerHTML = "step1";
+
+
+    /** Main async function to submit query and retrieve graph **/
+    async function retrieve(parameter, queryText) {
+
+      const session = driver.session({ defaultAccessMode: neo4j.session.READ })
+
+      try {
+        const result = await session.readTransaction(tx =>
+          tx.run(
+            //  'MATCH (n:MusicalWork) RETURN n.id'
+            queryText, { param: parameter }
+          )
+        )
+
+        const records = result.records
+
+        // Edit Json object, delete unneeded fields
+        for (x in records) {
+          delete records[x].keys
+          delete records[x].length
+          delete records[x]._fieldLookup
+          for (y in records[x]._fields) {
+            delete records[x]._fields[y].identity
+            delete records[x]._fields[y].start
+            delete records[x]._fields[y].end
+          }
+        }
+
+        // Test display of retrieval result
+        console.log('Response from Neo4j:', JSON.stringify(records, null, 2))
+        document.getElementById("raw-json").innerHTML = JSON.stringify(records, null, 2)
+
+        // Header: query keyword
+        document.getElementById("query").innerHTML = "Information on " + parameter.toUpperCase()
+
+
+        // Display in JsonView
+        // https://www.cssscript.com/json-data-tree-view/
+        // const tree = JsonView.createTree(result.records);
+        // JsonView.render(tree, document.querySelector('.json-view'))
+        document.querySelector('.json-view').innerHTML = ""  // first element with this class
+        const tree = JsonView.renderJSON(records, document.querySelector('.json-view'))
+        JsonView.expandChildren(tree);
+        // JsonView.collapseChildren(tree);
+
+
+
+        /* Display in a table */
+        var txt = "<table style='border-spacing: 2px;'><tr><th style='background-color:hsl(150,30%,70%)'>Relation</th><th style='background-color:hsl(150,30%,70%)'>Entity</th></tr>"
+        // display records in table rows
+        for (x in records) {
+          txt += "<tr>" 
+          txt += "<td style='background-color:hsl(150,30%,90%)'>" 
+          txt += records[x]._fields[0].type + "</td>"  // display relation
+
+          txt += "<td style='background-color:hsl(170,20%,95%)'><b>ID: " 
+          txt += records[x]._fields[1].properties.id + "</b><br/>"
+
+          for (z in records[x]._fields[1].properties) {
+          //  if (z != "id") {
+          //    txt += "<br/><em>" + z + "</em>: " + JSON.stringify(records[x]._fields[1].properties[z]).slice(1,-1) 
+          //  }
+            switch (z) {          // handle dates
+              case "id": break;   // skip id field as already displayed
+              case "birthDate": 
+                txt += "<br/><em>birthdate</em>: " + records[x]._fields[1].properties[z].year.low; 
+                txt += "-" + records[x]._fields[1].properties[z].month.low; 
+                txt += "-" + records[x]._fields[1].properties[z].day.low; 
+                break;
+              case "deathDate": 
+              txt += "<br/><em>deathdate</em>: " + records[x]._fields[1].properties[z].year.low; 
+                txt += "-" + records[x]._fields[1].properties[z].month.low; 
+                txt += "-" + records[x]._fields[1].properties[z].day.low; 
+                break;
+              case "date": 
+              txt += "<br/><em>date</em>: " + records[x]._fields[1].properties[z].year.low; 
+                txt += "-" + records[x]._fields[1].properties[z].month.low; 
+                txt += "-" + records[x]._fields[1].properties[z].day.low; 
+                break;
+              default: 
+                txt += "<br/><em>" + z + "</em>: " + JSON.stringify(records[x]._fields[1].properties[z]).slice(1,-1) 
+            }
+
+
+          }
+          txt += "</td>"
+
+          //  for looping through more than 2 columns
+          //  for (y in records[x]._fields) {
+          //  txt += "<td>" + JSON.stringify(records[x]._fields[y].properties) + "</td>"
+          //  }
+          txt += "</tr>"
+        }
+        txt += "</table>" 
+        document.getElementById("json-table").innerHTML = txt;
+
+
+         // return result.records
+
+      } catch (error) {
+        console.log(`unable to execute query. ${error}`)
+      } finally {
+        session.close()
+      }
+    }
+
+
+  // Initial retrieval & display
+  // retrieve(song1,queryText1a)
+
+
+  /** Scripts to manipulate Json object **/
+
+  // var records = result.records
+  /*
+  for (let i = 0; i < records.length; i++) {
+    var row = records[i].get(0)
+    rows.push(row)
+  }
+  */
+
+  // result.records.forEach(record => {
+  // console.log(`Found person: ${record.get('name')}`)
+  // })
+
+  /* console.log(result) */
+  /*
+  var singleRecord = result.records[0]
+  var node = singleRecord.get(0)
+  console.log(node.properties.name)
+  */
+
+  // result.records.forEach(record => {
+  //   console.log(`retrieved: ${record.get('label')}`)
+  // })
+
+  </script>
+
+</body>
+
+</html>

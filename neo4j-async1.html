@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+
+<p id="test"></p>
+<p>Results:</p>
+<p id="result"></p>
+
+   
+<script src="lib/neo4j-web.min.js"></script>
+
+<script>
+
+  //Create connection object
+  const driver = neo4j.driver(
+    'neo4j+s://0c8dfc4e.databases.neo4j.io', 
+    neo4j.auth.basic('anonymous','anonymous')
+  )
+ 
+  // Check connection
+  /*
+  try {
+    driver.verifyConnectivity()
+    console.log('Driver created')
+  } catch (error) {
+    console.log(`connectivity verification failed. ${error}`)
+  } 
+  */
+
+  // async function to submit query and retrieve graph
+  async function retrieve(song){
+
+    const session = driver.session({ defaultAccessMode: neo4j.session.READ })
+    // var song = 'Majulah Singapura'
+
+    try {
+      const result = await session.readTransaction(tx =>
+        tx.run(
+        //  'MATCH (n:MusicalWork) RETURN n.label'
+          'MATCH (n:MusicalWork {label: $label}) RETURN n',
+          { label: song }
+        )
+      )
+          
+    var records = result.records
+    
+    /** Script for manipulating Json object */
+    /*
+    for (let i = 0; i < records.length; i++) {
+      var row = records[i].get(0)
+      rows.push(row)
+    }
+    */
+
+    // result.records.forEach(record => {
+    // console.log(`Found person: ${record.get('name')}`)
+    // })
+
+
+    /* console.log(result) */
+    /*
+    var singleRecord = result.records[0]
+    var node = singleRecord.get(0)
+    console.log(node.properties.name)
+    */
+
+    // console.log('Response from Neo4j:', JSON.stringify(records, null, 2))
+      
+    // result.records.forEach(record => {
+    //   console.log(`retrieved: ${record.get('label')}`)
+    // })
+
+    document.getElementById("result").innerHTML = JSON.stringify(records, null, 2);
+
+    } catch (error) {
+      console.log(`unable to execute query. ${error}`)
+    } finally {
+      session.close()
+    }
+  }
+
+  retrieve('Majulah Singapura')
+    
+</script>
+
+</body>
+</html>

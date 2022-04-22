@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- link rel="stylesheet" type="text/css" href="lib/jsonview.bundle.css" -->
+  <title>Explore Compositions of Zubir Said</title>
+
+  <style>
+    td,th { vertical-align: top; padding:10px; text-align: left;}
+  </style>
+
+
+</head>
+
+<body onload='init()' style='font-family:Arial, Helvetica, sans-serif;'>
+
+  
+
+
+  <table style='height:100vmin; border-spacing: 5px'>
+    <tr><td colspan="2" style="padding: 0px; border-bottom: 1px solid lightgreen; height: 160px"><img src='lib/banner2.png' usemap='#mainmenu'/>
+      <map name="mainmenu">
+        <area shape="rect" coords="399,112,589,158" alt="The Long-Crooked Road" href="http://zubirsaid.info/">
+        <area shape="rect" coords="593,112,663,158" alt="About" href="http://zubirsaid.info/home/abt-2/">
+        <!-- area shape="rect" coords="666,112,831,158" alt="Explore compositions" href="http://zubirsaid.sg/compositions.html" -->
+        <area shape="rect" coords="834,112,1040,158" alt="Explore letters, photos, etc." href="photos-letters.html">
+      </map>
+    </td></tr>
+
+    <tr>
+      <td style='background-color:rgb(210, 227, 230); width:150px; text-align: left; padding: 10px'>
+        <h2 style='color:rgb(153, 48, 0);'>Select a topic</h2>
+
+        <h3 style='color:rgb(94, 0, 97);'>Majulah Singapura</h3>
+        <p> <button id="majulah-music" onclick="reset_tables();retrieve(song1,queryText1a,'query','json-table')">Music &amp; performance</button></p>
+        <p> <button id="majulah-letters" onclick="reset_tables();retrieve(song1,queryText1c,'query','json-table');retrieve(song1,queryText1d,'query','json-table2')">Letters, commentary, news</button></p>
+
+        <h3 style='color:rgb(94, 0, 97);'>Semoga Bahagia</h3>
+        <p><button id="semoga-music" onclick="reset_tables();retrieve(song2,queryText1a,'query','json-table')">Music &amp; performance</button></p>
+        <p><button id="semoga-letters" onclick="reset_tables();retrieve(song2,queryText1c,'query','json-table')">Letters, commentary, news</button></p>
+       
+        <p><em>Other songs forthcoming</em></p>
+
+        <hr/>
+
+        <h3 style='color:rgb(94, 0, 97);text-align: left;'>Social network</h3>
+        <p> <button onclick="retrieve('Zubir_Said',queryText2a1,'query','json-table');retrieve('Zubir_Said',queryText2a2,'query','json-table2');retrieve('Zubir_Said',queryText2a3,'query','json-table3')">People with links to Zubir Said</button></p>
+        <p><button onclick="reset_tables();display_image('lib/ZS.social_network2.png','Screenshot of interactive network visualization interface (forthcoming)','query','json-table')">Preview of visualization</button></p>
+
+        <h3 style='color:rgb(94, 0, 97);'>Browse by genre</h3>
+        <p>
+        <button id="genre-photos" onclick="reset_tables();retrieve('Photograph',queryText2b,'query','json-table')">Photos</button><br/>
+        <button id="genre-letters" onclick="reset_tables();retrieve('Letter',queryText2b,'query','json-table')">Letters</button><br/>
+        <button id="genre-speeches" onclick="reset_tables();retrieve('Speech',queryText2b,'query','json-table')">Speeches</button><br/>
+        <button id="genre-docs" onclick="reset_tables();retrieve('',queryText2c,'query','json-table')">Documents</button><br/>
+  
+        <p>
+        <button id="genre-commentary" onclick="reset_tables();retrieve('Comment',queryText2b,'query','json-table')">Commentary</button><br/>
+        <button id="genre-essays" onclick="reset_tables();retrieve('Essay',queryText2b,'query','json-table')">Essays</button><br/>
+        <button id="genre-news" onclick="reset_tables();retrieve('NewsArticle',queryText2b,'query','json-table')">News</button><br/>
+        <button id="genre-tv" onclick="reset_tables();retrieve('TV_documentary',queryText2b,'query','json-table')">TV documentaries</button><br/>
+      </p>
+      <p>
+        <button id="genre-all" onclick="reset_tables();retrieve('',queryText2d,'query','json-table');retrieve('',queryText2c,'query','json-table2')">ALL</button><br/>
+        </p>
+        
+        <h3 style='color:rgb(94, 0, 97);text-align: left;'>Browse by topic</h3>
+        <p>
+          <button id="topic" onclick="reset_tables();retrieve('',queryText2e,'query','json-table')">Topics</button>
+          </p>
+        <hr/>
+
+
+
+      </td>
+      <td style='text-align: left; padding: 20px'>
+        <h2 id="query" style='hsl(0,80%,50%);text-shadow: 1px 1px hsl(0, 100%, 80%);'>Zubir Said Knowledge Graph</h2>
+        <p><b>Click on a button on the left panel to select a topic</b></p>
+
+        <!-- navigation bar, to go to alternative graph interface -->
+        <div style='display:block; height:25px; padding:0px'>
+		  <a style='background-color:hsl(282,86%,80%); padding:8px; text-decoration:none; color: hsl(298, 100%, 20%); width:500px; '><b>Tabular text display</b></a><a href="ZS.graph.html" target="_blank" style='background-color:hsl(282,86%,95%); padding:8px; color:hsl(298,100%,20%); width:500px;' ><b>Try the alternative graph (network) visualization</b></a>
+        </div>
+              
+        <!-- Used to display properties of query entity-->
+        <div id="json-table0"></div>
+        <p/>  
+
+        <!-- Main table for displaying search results-->
+        <div id="json-table">
+        <table style='background-color: rgb(248, 242, 251);text-align: left;min-height: 300px;width: 800px;box-shadow: rgb(222, 160, 248) 5px 5px;color: rgb(88, 64, 124);line-height: 1.5;font-weight: 600;'><tr><td style='padding: 30px;'>
+		  <p>Explore the <span style='color:rgb(135, 39, 180)'>Knowledge Graph</span> (web of relationships) centred on Zubir Said and his compositions, letters, photos and other digital objects in the Zubir Said Collection at the <a href='https://www.nafa.edu.sg/' target='_blank'>Nanyang Academy of Fine Arts</a>, Singapore. 
+            Starting with the <span style='color:rgb(135, 39, 180)'>Musical Work</span> (e.g., Majulah Singapura), compare different versions and arrangements (<span style='color:rgb(135, 39, 180)'>Musical Expressions/Score</span>), check out different <span style='color:rgb(135, 39, 180)'>Performance</span> events of an arrangement and the resulting <span style='color:rgb(135, 39, 180)'>Sound</span> or video, and view the related <span style='color:rgb(135, 39, 180)'>Item</span> (audio/video/image file).</p>
+          <p>This page provides a <span style='color:rgb(135, 39, 180)'>text-based</span> interface to navigate the Knowledge Graph -- to traverse relationships between concept nodes by clicking on hyperlinks. 
+            An <a href='ZS.graph.html' target='_blank' style='color:rgb(135, 39, 180)'>interactive network visualization</a> interface is also available. <a href='ZS.graph.html' target='_blank' style='color:rgb(135, 39, 180)'>Try it!</a></p>
+          <p style='color:rgb(135, 39, 180)'>Click on a button on the side panel, and go on your "crooked journey" in the Knowledge Web of Zubir Said's personal digital archive.</p>
+        </td></tr></table>
+        </div>
+        <p/>  
+
+        <!-- To display additional search results -->
+        <div id="json-table2"></div>
+        <p/>
+        <div id="json-table3"></div>
+        <p/>  
+        <div id="json-table4"></div>
+        <p/>  
+        <div id="json-table5"></div>
+        <p/>  
+
+        <h3 style='display:none'>Tree view</h3>
+        <div class="json-view"></div>
+
+        <h3 style='display:none'>Raw Json </h3>
+        <p id="raw-json"></p>
+
+
+      </td>
+    </tr>
+  </table>
+
+
+  <script src="lib/neo4j-web.min.js"></script>
+  <script src="lib/zubirsaid.js"></script>
+  <!-- script src="lib/jsonview.bundle.js" -->
+
+
+
+</body>
+
+</html>

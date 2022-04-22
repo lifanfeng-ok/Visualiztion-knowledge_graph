@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- link rel="stylesheet" type="text/css" href="lib/jsonview.bundle.css" -->
+
+  <style>
+    td,th { vertical-align: top; padding:10px; text-align: left;}
+
+    </style>
+</head>
+
+<body onload='init()'>
+
+  <table style='height:100vmin'>
+    <tr>
+      <td style='width:20%; background-color:rgb(204, 220, 223); width:100px;text-align: left;'>
+        <h2 style='color:hsl(30,100%,30%);'>Compositions of Zubir Said</h2>
+
+        <p><em>Click button to select</em></p>
+        <h3 style='color:rgb(69, 0, 97);'>Majulah Singapura</h3>
+        <p> <button onclick="retrieve(song1,queryText1a,'query','json-table')">Music &amp; performance</button></p>
+        <p> <button onclick="retrieve(song1,queryText1c,'query','json-table');retrieve(song1,queryText1d,'query','json-table2')">Letters, commentary, news</button></p>
+
+        <h3 style='color:rgb(69, 0, 97);text-align: center;'>Semoga Bahagia</h3>
+        <p><button onclick="retrieve(song2,queryText1a,'query','json-table')">Music &amp; performance</button></p>
+        <p><button onclick="retrieve(song2,queryText1c,'query','json-table')">Letters, commentary, news</button></p>
+
+        <p><em>Other songs forthcoming</em></p>
+
+        <hr/>
+
+
+      </td>
+      <td>
+        <h2 id="query" style='color:rgb(90, 89, 0);text-shadow: 1px 1px rgb(236, 153, 0);'>Click on a button on the left panel to select a topic</h2>
+              
+        <!-- Used to display properties of query entity-->
+        <div id="json-table0"></div>
+        <p/>  
+
+        <!-- Main table for displaying search results-->
+        <div id="json-table">
+        <table style='background-color: rgb(248, 242, 251);text-align: left;min-height: 300px;min-width: 600px;box-shadow: rgb(222, 160, 248) 5px 5px;'><tr><td style='padding: 50px;'>Some explanation to be added later</td></tr></table>
+        </div>
+        <p/>  
+
+        <!-- To display additional search results -->
+        <div id="json-table2"></div>
+        <p/>
+        <div id="json-table3"></div>
+        <p/>  
+        <div id="json-table4"></div>
+        <p/>  
+        <div id="json-table5"></div>
+        <p/>  
+
+        <h3 style='display:none'>Tree view</h3>
+        <div class="json-view"></div>
+
+        <h3 style='display:none'>Raw Json </h3>
+        <p id="raw-json"></p>
+
+
+      </td>
+    </tr>
+  </table>
+
+
+  <script src="lib/neo4j-web.min.js"></script>
+  <script src="lib/zubirsaid.js"></script>
+  <!-- script src="lib/jsonview.bundle.js" -->
+
+
+
+</body>
+
+</html>

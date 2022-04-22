@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+
+  <title>Explore a Zubir Said Knowledge Graph</title>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TCDSWRV');</script>
+<!-- End Google Tag Manager -->
+
+  <script src="lib/neo4j-web.min.js"></script>
+  <script src="lib/cytoscape.min.js"></script>
+  <script src="lib/cola.min.js"></script>
+  <script src="lib/cytoscape-cola.js"></script>
+  <script src="lib/layout-base.js"></script>
+  <script src="lib/cose-base.js"></script>
+  <script src="lib/cytoscape-fcose.js"></script>
+  <script src="lib/weaver.min.js"></script>
+  <script src="lib/cytoscape-spread.js"></script>
+  <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+<!--  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>-->
+  <!-- script src="lib/cytoscape-dagre.js" -->
+<!--  <script src="lib/ZS.graph.api.js"></script>-->
+<!--  <script src="lib/vis.js"></script>  -->
+    <style>
+    td,th { vertical-align: top;
+            padding:10px;
+            text-align: left;
+    }
+    ul {
+        padding: 0;
+        margin: 0;
+    }
+    button {
+      margin: 0;
+      padding: 0;
+      border: 1px solid transparent;
+      outline: none;
+    }
+    .content {
+        background-color: #ffffff;
+        width: 100%;
+        height: 800px;
+        border: 2px solid black;
+        border-radius: 3px 3px;
+        box-sizing: border-box;
+    }
+    .left {
+        position: relative;
+        float: left;
+        width: 30%;
+        height: 100%;
+        background-color: #CBD2E6;
+        overflow: hidden;
+    }
+    .right {
+        float: left;
+        width: 70%;
+        height: 100%;
+        background-color: #FBF7FD;
+    }
+    .right .story {
+         width: 100%;
+         height: 100%;
+         display: none;
+    }
+    .right .active {
+        display: block;
+    }
+    .left .active {
+        display: block;
+    }
+    .left li {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: #CBD2E6;
+        list-style: none;
+        display: none;
+        overflow: hidden;
+    }
+    .left li .header {
+         font-weight: bold;
+         font-size: 22px;
+         text-align: center;
+         margin-bottom: 15px;
+    }
+    .left li .text {
+        text-align: left;
+        white-space: pre-line;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 30;
+        overflow: hidden;
+        padding: 0 10px;
+    }
+    .footer {
+       position: relative;
+       height: 40px;
+    }
+    .footer .previous {
+       height: 30px;
+       position: absolute;
+       top: 50%;
+       transform: translateY(-50%);
+       left: 20px;
+       background-color:#008CBA ;
+       width: 64px;
+       border-radius: 5px;
+    }
+    .footer .previous:hover {
+        box-shadow: 0 0 5px 0 rgba(0,0,0,0.24), 0 0 5px 0 rgba(0,0,0,0.19);
+        cursor: pointer;
+    }
+     .footer .next {
+       height: 30px;
+       position: absolute;
+       top: 50%;
+       transform: translateY(-50%);
+       right: 20px;
+       background-color:#008CBA ;
+       width: 60px;
+       border-radius: 5px;
+    }
+    .footer .next:hover {
+       box-shadow: 0 0 5px 0 rgba(0,0,0,0.24), 0 0 5px 0 rgba(0,0,0,0.19);
+       cursor: pointer;
+    }
+    .footer .story_selection {
+       height: 31px;
+       width: 131px;
+       position: absolute;
+       top: 50%;
+       transform: translate(-50%,-50%);
+       left: 50%;
+    }
+    .story .info_box {
+         display: flex;
+         flex-direction: row;
+         justify-content: space-around;
+         width: 100%;
+         height: 350px;
+         overflow: hidden;
+    }
+    .info_box .image {
+        width: 0;
+        flex: 1;
+        height: 280px;
+        margin: 0 5px;
+    }
+
+    </style>
+
+</head>
+
+<body style='font-family:Arial, Helvetica, sans-serif;'>
+
+<!-- Google Tag Manager (noscript) -->
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TCDSWRV"
+            height="0" width="0" style="display:none;visibility:hidden"></iframe>
+</noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+  <table style='height:168px;'>
+    <tr><td colspan="2" style="padding: 0; border-bottom: 1px solid lightgreen; height: 160px"><img src="https://zubirsaid.sg/banner3.png" usemap="#mainmenu" alt="haha"/>
+      <map name="mainmenu">
+        <area shape="rect" coords="399,112,589,158" alt="The Long-Crooked Road" href="http://zubirsaid.info/">
+        <area shape="rect" coords="593,112,663,158" alt="About" href="http://zubirsaid.info/home/abt-2/">
+        <!-- area shape="rect" coords="666,112,831,158" alt="Knowledge Graph Visualizations" href="http://zubirsaid.sg" -->
+        <area shape="rect" coords="900,112,1040,158" alt="Facebook Page" href="https://www.facebook.com/ZubirSaid.info">
+      </map>
+    </td></tr>
+  </table>
+  <div class="content">
+       <ul class="left"></ul>
+       <div class="right"></div>
+  </div>
+
+<script type="module" src="storyboard.js"></script>
+
+
+</body>
+
+</html>

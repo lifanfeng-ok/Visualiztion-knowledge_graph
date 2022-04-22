@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+	
+  <title>Singapore Pioneers Knowledge Graph & Social Network</title>
+
+  <script src="neo4j-web.min.js"></script>
+  <script src="cytoscape.min.js"></script>
+  <script src="cola.min.js"></script>
+  <script src="cytoscape-cola.js"></script>
+  <script src="layout-base.js"></script>
+  <script src="cose-base.js"></script>
+  <script src="cytoscape-fcose.js"></script>
+  <script src="weaver.min.js"></script>
+  <script src="cytoscape-spread.js"></script>
+  <script src="SP.graph.js"></script>
+  
+  <style>
+    td,th { vertical-align: top; padding:10px; text-align: left;}
+  </style>
+
+</head>
+
+<body style='font-family:Arial, Helvetica, sans-serif;'>
+
+
+  <table style='height:100vmin; border-spacing: 5px'>
+    <!-- Placeholder row for possible banner
+    <tr><td colspan="2" style="padding: 0px; border-bottom: 1px solid lightgreen; height: 30px">
+    <h2 style="color:Purple">Singapore Pioneers - Knowledge Graph & Social Network</h2>
+    </td></tr>
+	-->
+
+    <tr>
+      <td style='background-color:hsl(225, 35%, 85%); width:150px; text-align: left; padding: 10px'>
+
+        <h2 style='color:rgb(153, 48, 0);'>Browse by</h2>
+		<small>Click on a collapsible menu below</small>
+
+        <button class="accordion">Pioneers</button>
+        <div class="panel">	
+		<br/>
+		<div><b><label for="Pioneer">Step 1. Select pioneer</label></b>
+		<select id="Pioneer" name="Pioneer">
+		<option value='Chen_Wen_Hsi'>Select</option>
+		<option value='Ambo_Sooloh'>Ambo Sooloh</option>
+		<option value='Chen_Wen_Hsi'>Chen Wen Hsi</option>
+		<option value='Chia_Boon_Leong'>Chia Boon Leong</option>
+		<option value='Choo_Seng_Quee'>Choo Seng Quee</option>
+		<option value='EW_Barker'>EW Barker</option>
+		<option value='Hedwig_Anuar'>Hedwig Anuar</option>
+		<option value='John_Chia_Keng_Hock'>John Chia Keng Hock</option>
+		<option value='Lee_Kip_Lin'>Lee Kip Lin</option>
+		<option value='Lee_Seng_Gee'>Lee Seng Gee</option>
+		<option value='Lim_Chong_Pang'>Lim Chong Pang</option>
+		<option value='Lim_Tze_Peng'>Lim Tze Peng</option>
+		<option value='Lim_Yong_Liang'>Lim Yong Liang</option>
+		<option value='LM_Pennefather'>LM Pennefather</option>
+		<option value='Loke_Wan_Tho'>Loke Wan Tho</option>
+		<option value='P_Govindasamy_Pillai'>P Govindasamy Pillai</option>
+		<option value='Paul_Abisheganaden'>Paul Abisheganaden</option>
+		<option value='R_Jumabhoy'>R Jumabhoy</option>
+		<option value='Tan_Eng_Joo'>Tan Eng Joo</option>
+		<option value='Yusof_Ishak'>Yusof Ishak</option>
+		<option value='Zubir_Said'>Zubir Said</option>
+        </select></div>
+        <p/>
+
+		<b>Step 2. Select type of relationship</b><br/>
+		<input type='checkbox' id='achievement' name='achievement' value='achievement'><label for='achievement'>achievement</label><br>
+		<input type='checkbox' id='award' name='award' value='award'><label for='award'>award</label><br>
+		<input type='checkbox' id='business' name='business' value='business'><label for='business'>business</label><br>
+		<input type='checkbox' id='creator_of' name='creator_of' value='creator_of'><label for='creator_of'>author of</label><br>
+		<input type='checkbox' id='football' name='football' value='football'><label for='football'>football</label><br>
+		<input type='checkbox' id='interpersonal' name='interpersonal' value='interpersonal' checked><label for='interpersonal'>interpersonal</label><br>
+		<input type='checkbox' id='kinship' name='kinship' value='kinship' checked><label for='kinship'>kinship</label><br>
+		<input type='checkbox' id='leisure' name='leisure' value='leisure'><label for='leisure'>leisure</label><br>
+		<input type='checkbox' id='movie' name='movie' value='movie'><label for='movie'>movie</label><br>
+		<input type='checkbox' id='music' name='music' value='music'><label for='music'>music</label><br>
+		<input type='checkbox' id='official_of' name='official_of' value='official_of'><label for='official_of'>official of</label><br>
+		<input type='checkbox' id='organisation' name='organisation' value='organisation'><label for='organisation'>organisation</label><br>
+		<input type='checkbox' id='performance' name='performance' value='performance'><label for='performance'>performance</label><br>
+		<input type='checkbox' id='philanthropy' name='philanthropy' value='philanthropy'><label for='philanthropy'>philanthropy</label><br>
+		<input type='checkbox' id='place' name='place' value='place'><label for='place'>place</label><br>
+		<input type='checkbox' id='school' name='school' value='school'><label for='school'>school</label><br>
+		<input type='checkbox' id='sports' name='sports' value='sports'><label for='sports'>sports</label><br>
+		<input type='checkbox' id='URL' name='URL' value='URL'><label for='URL'>URL</label><br>
+		<p/>
+        <b>Step 3. Click</b> <button id="checkbox_submit">Submit</button><p/>
+		</div>
+		
+        <button class="accordion">Social network</button>
+        <div class="panel">
+		<p> 
+		<button id="network_kin">Inter-personal network</button><br/>
+        <button id="network_school">School network</button><br/>
+        <button id="network_business">Business network</button><br/>
+        <button id="network_community">Community network</button><br/>
+        <button id="network_culture">Culture network</button><br/>
+		<button id="network_sports">Sports/leisure network</button><br/>
+		</p>
+        </div>
+
+        <button class="accordion">Entities</button>
+		<div class="panel">
+        <p>
+        <button id="entity_school">Schools</button><br/>
+		<button id="entity_business">Business entities</button><br/>	
+		<button id="entity_culture">Cultural/artistic entities</button><br/>	
+		<button id="entity_sports">Sports/Hobbies</button><br/>	
+		<button id="entity_community">Community/Social/Political</button><br/>				
+        <button id="entity_org">All organisations</button><br/>
+		</p>
+		<p>
+        <button id="entity_movie">Movies</button><br/>
+		<button id="entity_music">Music</button><br/>
+        <button id="entity_art">Art/Paintings</button><br/>
+		<button id="entity_creative">All creative works</button><br/>
+        </p>
+		<p>
+        <button id="entity_event">Events</button><br/>
+        <button id="entity_law">Laws</button><br/>
+		<button id="entity_place">Places</button><br/>
+        <button id="entity_building">Buildings</button><br/>
+        <button id="entity_award">Awards/Recognition</button><br/>
+        </p>
+		</div>
+		
+        <button class="accordion">Special topics</button>
+		<div class="panel">
+        <p>
+        <button id="special_interethnic">Inter-ethnic relations</button><br/>
+        <button id="special_interethnic_table">List in table</button><p/>
+		
+        <button id="special_multi">Multiple links between persons</button><p/>
+		
+		<button id="special_triad">Triadic relation structure</button><br/>
+		<button id="special_triad_table">List in table</button><p/>
+		
+        </p>
+		</div>
+		
+		<button class="accordion">Relationship path</button>
+		<div class="panel">
+		<p/>
+		
+		<b>Entity A: </b><input type='text' id='keywordA' name='keywordA' placeholder='Enter keyword'/>
+		<button id="button-keywordA">Search</button><br/>	
+		<select id='entityA' name='entityA'></select>
+        <p/>
+		
+		<b>Entity B: </b><input type='text' id='keywordB' name='keywordB' placeholder='Enter keyword'/>
+		<button id='button-keywordB'>Search</button><br/>	
+		<select id='entityB' name='entityB'></select>		
+		
+        <p/>		
+        <button id="button-path">Find path from Entity A to B</button><br/>
+        <button id="button-entityA">Display just Entity A</button><br/>
+        <p/>
+		</div>
+		
+        <hr/>
+       
+
+      </td>
+      <td style='text-align: left; padding: 20px'>
+        <h2 id="query" style='text-shadow: 1px 1px hsl(0, 100%, 80%);'>Singapore Pioneers - Knowledge Graph & Social Network</h2>
+		<p><b>Click on buttons on the left panel to select types of information to display on the canvas below.</b><br/></p>
+              
+
+        <!-- Popup Modal -->
+        <div id="modal1" class="modal">
+		  <div class="modal-content">
+          <span id="close1" class="close">&times;</span>        
+		    <p>Explore a <span style='color:rgb(135, 39, 180)'>Knowledge Graph and Social Network</span> of Singapore Pioneers.</p>
+            <p>This is a proof-of-concept developed by National Library Digital Fellow Ng Siam Gek, in collaboration with Chris Khoo (Nanyang Technological University), for the project <span style='color:rgb(135, 39, 180)'>An Interactive Social Network of Singapore Pioneers</span>.</p>
+            <p>The project objective was to explore the social networks of selected pioneers in post-war Singapore, using Singapore Infopedia, the National Library Board’s electronic encyclopedia on Singapore, to map the characteristics of pioneers including relationship types (e.g., kinship, business, industry, cultural, etc.) and entities (e.g., schools, organisations, activities, and places) that mediate these relationships.</p> 
+            <p>Any errors in the knowledge graph are the responsibility of Ng Siam Gek &amp; Chris Khoo. All copyright and intellectual property in this Work by the Digital Fellow belong to the National Library Board.</p> 
+            <p style='color:rgb(135, 39, 180)'>Click on buttons on the side panel to select types of information to display.</p>
+          </div>
+        </div>
+		
+        <p/>  
+   
+
+<div id='canvasWithMenu' style='display:block; height:800px; width:1150px;'>
+		<!-- menu bar for display canvas -->
+		<div style='background-color:hsl(282,86%,90%); padding:2px; width:100%; display:block'><b>Change graph layout: <button id="layout-breadthfirst" style="background-color:hsl(195, 100%, 95%);">Tree</button> <button id="layout-concentric" style="background-color:hsl(195, 100%, 95%);">Concentric</button> 
+		<button id="layout-fcose" style="background-color:hsl(195, 100%, 95%);">Force-Cose</button> <button id="layout-cola" style="background-color:hsl(195, 100%, 95%);">Force-Cola (default)</button> 
+		<button id="clear_canvas" style="background-color:hsl(60,100%,70%);">Clear canvas</button> <button id="reset_zoom" style="background-color:hsl(60,100%,70%);">Reset zoom</button> <button id="layout-spread" style="background-color:hsl(60,100%,70%);">Spread-out graph</button> 
+		<button id="resizeCanvas" style="background-color:hsl(80,100%,70%);">Resize canvas</button> <button id="fullscreen" style="background-color:hsl(80,100%,70%);">Open fullscreen</button></b><br/>
+		Suggestion: Click on a node or link to display metadata. Right-click to expand the node with neighboring nodes.</div>
+
+        <!-- Canvas to display Cytoscape graph -->
+        <div id="cy" style='height:100%; width:100%; display:block; border-style:solid; border-width:1px; border-color:hsl(280,53%,60%); background-color:hsl(280,53%,98%); box-shadow: rgb(222,160,248) 5px 5px;);'></div>
+        <p/>
+        
+		<h2 id='query2' style='text-shadow: 1px 1px hsl(0, 100%, 80%);'></h2>
+        <div id='table1'></div>
+		
+
+        <!-- Popup info box to display node and edge attributes -->
+        <div id='graph-popup1' class='modal2'>
+		  <div class='modal2-content'>
+			  <span id='graph-popup1-close' class='close'>&nbsp; &times;</span>
+			  <span id='graph-popup1-pin' class='pin'>! </span>
+			  <p style='color: hsl(264, 80%, 40%); font-weight: 500;'><u>Drag</u> this info box to new location.<br/>
+			  <u>Double-click</u> in the box to close, or click on X<br/>
+			  <u>Click</u> on ! to pin box, & resize</p>
+			  <hr/>
+			<div id='graph-popup1-content'> </div>
+			<div id='graph-popup1-menu'> 
+			  <button id="node-expand">Expand node</button> <button id="node-remove">Remove node</button>
+			</div>
+		  </div>
+		</div>
+</div>
+		     
+      </td>
+    </tr>
+  </table>
+
+
+<style>
+
+/* The Modal (background) */
+.modal {
+  display: none;   /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1;      /* Sit on top */
+  left: 230px;     /* 168px;  */
+  top: 100px;      /* 268px;  */
+  width: 800px; 
+  height: 80%; 
+  overflow: auto; /* Enable scroll if needed */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: rgb(248, 242, 251);
+  text-align: left; 
+  width: 750px;
+  box-shadow: rgb(222, 160, 248) 5px 5px;
+  color: rgb(88, 64, 124);
+  line-height: 1.5;
+  font-weight: 550;      /* 600; */
+  padding: 20px;
+}
+
+/* Graph popup/Info box panel */
+.modal2 {
+  display: none;   /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1;      /* Sit on top */
+  right: 3px;
+  top: 20px;
+  width: 320px; 
+  height: 650px; 
+  resize: both;
+  overflow: auto;  /* Enable scroll if needed */
+}
+
+.modal2-content {
+  background-color: hsl(283, 54%, 95%);
+  text-align: left; 
+  width: 95%        // 300px;
+  min-height: 610px; 
+  box-shadow: hsl(283, 86%, 80%) 0px 5px;
+  color: hsl(264, 32%, 30%));
+  line-height: 1;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: normal;
+  padding: 10px;
+}
+
+
+/* The Close Button */
+.close, .pin {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover, .close:focus, .pin:hover, .pin:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+/* Style the buttons that are used to open and close the accordion panel */
+.accordion {
+  background-color: #eee;
+  // color: #444;
+  cursor: pointer;
+  padding: 5px;
+  width: 100%;
+  text-align: left;
+  border-style: outset;
+  border-width: 3px;
+  // border-color:
+  outline: none;
+  transition: 0.4s;
+  
+  color:rgb(94,0,97); 
+  font-size:1.1em; 
+  font-weight: bold; 
+  text-shadow: 1px 1px hsl(90,30%,80%);
+}
+
+/* Add a background color to the button if it is clicked on (add the .active class with JS), and when you move the mouse over it (hover) */
+.active, .accordion:hover {
+  background-color: hsl(225, 50%, 90%);
+}
+
+/* Style the accordion panel. Note: hidden by default */
+.panel {
+  padding: 0 0px;
+  // background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.accordion:after {
+  content: '\02795'; /* Unicode character for "plus" sign (+) */
+  font-size: 10px;
+  color: #777;
+  float: right;
+  margin-left: 0px;
+}
+
+.active:after {
+  content: "\2796"; /* Unicode character for "minus" sign (-) */
+}
+
+</style>
+
+
+</body>
+
+</html>

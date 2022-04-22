@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  
+  <title>Explore a Zubir Said Knowledge Graph</title>
+
+  <script src="lib/neo4j-web.min.js"></script>
+  <script src="lib/cytoscape.min.js"></script>
+  <script src="lib/cola.min.js"></script>
+  <script src="lib/cytoscape-cola.js"></script>
+  <script src="lib/layout-base.js"></script>
+  <script src="lib/cose-base.js"></script>
+  <script src="lib/cytoscape-cose-bilkent.js"></script>
+  <script src="lib/ZS.graph.api.js"></script>
+  
+  <style>
+    td,th { vertical-align: top; padding:10px; text-align: left;}
+  </style>
+
+</head>
+
+<body style='font-family:Arial, Helvetica, sans-serif;'>
+
+ 
+  <table style='height:100vmin; border-spacing: 5px'>
+    <tr><td colspan="2" style="padding: 0px; border-bottom: 1px solid lightgreen; height: 160px"><img src='lib/banner2.png' usemap='#mainmenu'/>
+      <map name="mainmenu">
+        <area shape="rect" coords="399,112,589,158" alt="The Long-Crooked Road" href="http://zubirsaid.info/">
+        <area shape="rect" coords="593,112,663,158" alt="About" href="http://zubirsaid.info/home/abt-2/">
+        <!-- area shape="rect" coords="666,112,831,158" alt="Explore compositions" href="http://zubirsaid.sg/compositions.html" -->
+        <area shape="rect" coords="834,112,1040,158" alt="Explore letters, photos, etc." href="photos-letters.html">
+      </map>
+    </td></tr>
+
+    <tr>
+      <td style='background-color:hsl(211, 30%, 86%); width:150px; text-align: left; padding: 10px'>
+        <h2 style='color:rgb(153, 48, 0);'>Add a subgraph</h2>
+
+        <h3 style='color:rgb(94, 0, 97);'>Majulah Singapura</h3>
+        <p> <button id="majulah-music">Music &amp; performance</button> </p>
+        <p> <button id="majulah-letters">Letters, commentary, news</button> </p>
+        
+        <h3 style='color:rgb(94, 0, 97);'>Semoga Bahagia</h3>
+        <p> <button id="semoga-music"> Music &amp; performance</button> </p>
+        <p> <button id="semoga-letters">Letters, commentary, news</button> </p>
+        
+        <p><em>Other songs forthcoming</em></p>
+
+        <hr/>
+        <h3 style='color:rgb(94, 0, 97);text-align: left;'>Social network</h3>
+        <p> <button id="social_network">People with links to Zubir Said</button></p>
+
+        <h3 style='color:rgb(94, 0, 97);'>Browse by genre</h3>
+        <p>
+        <button id="genre-photos">Photos</button><br/>
+        <button id="genre-letters">Letters</button><br/>
+        <button id="genre-speeches">Speeches</button><br/>
+        <button id="genre-docs">Documents</button><br/>
+        </p>
+		
+        <p>
+        <button id="genre-commentary">Commentary</button><br/>
+        <button id="genre-essays">Essays</button><br/>
+        <button id="genre-news">News</button><br/>
+        <button id="genre-tv">TV documentaries</button><br/>
+        </p>
+        <p>
+        <button id="genre-all">ALL</button><br/>
+        </p>
+        
+        <h3 style='color:rgb(94, 0, 97);text-align: left;'>Browse by topic</h3>
+        <p>
+          <button id="topic">Topics</button>
+        </p>
+        <hr/>
+       
+
+      </td>
+      <td style='text-align: left; padding: 20px'>
+        <h2 id="query" style='hsl(0,80%,50%);text-shadow: 1px 1px hsl(0, 100%, 80%);'>Zubir Said Knowledge Graph</h2>
+		<p><b>Click on buttons on the left panel to add a subgraph to the display canvas below.</b> <br/>
+		Typical response time is 5-10 sec. If no network is displayed after 10 sec., you may have accidentally zoomed out while scrolling down the page.<br/> 
+		Try moving the mouse roller up and down to zoom in and out, or click on <em>Reset zoom</em> button.</p>
+              
+        <!-- Display properties of query entity-->
+        <div id="display1"></div>
+        <p/>  
+
+        <!-- Popup Modal -->
+        <div id="modal1" class="modal">
+		  <div class="modal-content">
+          <span id="close1" class="close">&times;</span>        
+		    <p>Explore the <span style='color:rgb(135, 39, 180)'>Knowledge Graph</span> (web of relationships) centred on Zubir Said and his compositions, letters, photos and other digital objects in the Zubir Said Collection at the <a href='https://www.nafa.edu.sg/' target='_blank'>Nanyang Academy of Fine Arts</a>, Singapore. 
+            Starting with the <span style='color:rgb(135, 39, 180)'>Musical Work</span> (e.g., Majulah Singapura), compare different versions and arrangements (<span style='color:rgb(135, 39, 180)'>Musical Expressions/Score</span>), check out different <span style='color:rgb(135, 39, 180)'>Performance</span> events of an arrangement and the resulting <span style='color:rgb(135, 39, 180)'>Sound</span> or video, and view the related <span style='color:rgb(135, 39, 180)'>Item</span> (audio/video/image file).</p>
+
+            <p>A <a href='ZS.text.html' target='_blank' style='color:rgb(135, 39, 180)'>text-based</a> interface is also available. 
+
+            <p style='color:rgb(135, 39, 180)'>Click on a button on the side panel, and go on your "crooked journey" in the Knowledge Web of Zubir Said's personal digital archive.</p>
+          </div>
+        </div>
+		
+        <p/>  
+   
+        <!-- navigation bar, to go to alternative text interface -->
+        <div style='display:block; height:25px; padding:0px'>
+		  <a style='background-color:hsl(282,86%,80%); padding:8px; text-decoration:none; color: hsl(298, 100%, 20%); width:500px; '><b>Interactive graph (network) display</b></a><a href="ZS.text.html" target="_blank" style='background-color:hsl(282,86%,95%); padding:8px; color:hsl(298,100%,20%); width:500px;' ><b>Try the alternative text interface</b></a>
+        </div>
+		
+		<!-- menu bar for display canvas -->
+		<div style='background-color:hsl(282,86%,90%); padding:2px; width:1150px; display:block'><b>Change graph layout: <button id="layout-breadthfirst">Tree</button> <button id="layout-concentric">Concentric</button> <button id="layout-cose-bilkent">Force-Cose Bilkent (slow)</button> <button id="layout-cose">Force-Cose (fast)</button> <button id="layout-cola">Force-Cola (default)</button> <button id="clear_canvas" style="background-color:hsl(60,100%,70%);">Clear canvas</button> <button id="reset_zoom" style="background-color:hsl(60,100%,70%);">Reset zoom</button></b><br/>
+		Suggestion: Click on a node or link to display metadata. Right-click to expand the node with neighboring nodes.</div>
+
+        <!-- Canvas to display Cytoscape graph -->
+        <div id="cy" style='height:1000px; width:1150px; display:block; border-style:solid; border-width:1px; border-color:hsl(280,53%,60%); background-color:hsl(280,53%,98%); box-shadow: rgb(222,160,248) 5px 5px;);'></div>
+        <p/>
+        
+        <!-- Additional text display -->
+        <div id="display3"></div>
+        <p/>
+
+        <!-- Popup info box to display node and edge attributes -->
+        <div id='graph-popup1' class='modal2'>
+		  <div class='modal2-content'>
+			  <span id='graph-popup1-close' class='close'>&times;</span>
+			  <p style='color: hsl(264, 80%, 40%); font-weight: 500;'><u>Drag</u> this info box to new location.<br/>
+			  <u>Double-click</u> in the box to close, or click on X</p>
+			  <hr/>
+			<div id='graph-popup1-content'> </div>
+			<div id='graph-popup1-menu'> 
+			  <button id="node-expand">Expand node</button> <button id="node-remove">Remove node</button>
+			</div>
+		  </div>
+		</div>
+		     
+      </td>
+    </tr>
+  </table>
+
+
+<style>
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 168px;
+  top: 268px;
+  width: 800px; 
+  height: 80%; 
+  overflow: auto; /* Enable scroll if needed */
+}
+
+/* Modal Content/Box */
+.modal-content {
+  background-color: rgb(248, 242, 251);
+  text-align: left; 
+  width: 750px;
+  box-shadow: rgb(222, 160, 248) 5px 5px;
+  color: rgb(88, 64, 124);
+  line-height: 1.5;
+  font-weight: 600;
+  padding: 20px;
+}
+
+/* Graph popup panel */
+.modal2 {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  right: 3px;
+  top: 20px;
+  width: 320px; 
+  height: 650px; 
+  overflow: auto; /* Enable scroll if needed */
+}
+
+.modal2-content {
+  background-color: hsl(283, 54%, 95%);
+  text-align: left; 
+  width: 300px;
+  height: 600px; 
+  box-shadow: hsl(283, 86%, 80%) 0px 5px;
+  color: hsl(264, 32%, 30%));
+  line-height: 1;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: normal;
+  padding: 10px;
+}
+
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+
+</style>
+
+
+</body>
+
+</html>
