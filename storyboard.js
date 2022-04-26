@@ -604,7 +604,10 @@ document.addEventListener('DOMContentLoaded',function () {
  //   let newdata;
     let test_git = '1111,I'
 
+    let ad ;
+    let ad2 = '2';
 
+    let dev = '1';
 
 })
 
