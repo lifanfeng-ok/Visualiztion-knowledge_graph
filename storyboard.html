@@ -144,8 +144,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
          flex-direction: row;
          justify-content: space-around;
          width: 100%;
-         height: 350px;
+         height: 36%;
          overflow: hidden;
+    }
+    .story .graph_area {
+        width: 100%;
+        height: 64%;
     }
     .info_box .image {
         width: 0;
@@ -153,6 +157,46 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         height: 280px;
         margin: 0 5px;
     }
+    /* Graph popup/Info box panel */
+.modal2 {
+  display: none;   /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1;      /* Sit on top */
+  right: 3px;
+  top: 20px;
+  width: 320px;
+  height: 650px;
+  resize: both;
+  overflow: auto;  /* Enable scroll if needed */
+}
+
+.modal2-content {
+  background-color: hsl(283, 54%, 95%);
+  text-align: left;
+  width: 95%        ;
+  min-height: 610px;
+  box-shadow: hsl(283, 86%, 80%) 0px 5px;
+  color: hsl(264, 32%, 30%);
+  line-height: 1;
+  font-family: "Times New Roman", Times, serif;
+  font-weight: normal;
+  padding: 10px;
+}
+
+
+/* The Close Button */
+.close, .pin {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover, .close:focus, .pin:hover, .pin:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 
     </style>
 
@@ -182,7 +226,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
        <div class="right"></div>
   </div>
 
+      <div id='graph-popup1' class='modal2'>
+		  <div class='modal2-content'>
+			  <span id='graph-popup1-close' class='close'>&nbsp; &times;</span>
+			  <span id='graph-popup1-pin' class='pin'>! </span>
+			  <p style='color: hsl(264, 80%, 40%); font-weight: 500;'><u>Drag</u> this info box to new location.<br/>
+			  <u>Double-click</u> in the box to close, or click on X<br/>
+			  <u>Click</u> on ! to pin box, & resize</p>
+			  <hr/>
+			<div id='graph-popup1-content'> </div>
+			<div id='graph-popup1-menu'>
+			</div>
+		  </div>
+      </div>
+
 <script type="module" src="storyboard.js"></script>
+ <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
 
 
 </body>
