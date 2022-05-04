@@ -601,13 +601,6 @@ document.addEventListener('DOMContentLoaded',function () {
    }
    renderGraph(0);
 
- //   let newdata;
-    let test_git = '1111,I'
-
-    let ad ;
-    let ad2 = '2';
-
-    let dev = '1';
 
 })
 
